@@ -36,6 +36,11 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
                         type: "web_url",
                         url: offer.webpage,
                         title: "Szczegóły"
+                    },
+                    {
+                        type: "web_url",
+                        url: "https://www.facebook.com/groups/jlabsjobs/",
+                        title: "Więcej ofert of J-Labs"
                     }]
                 }
             });
@@ -86,7 +91,7 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
         Offers.find( function (err, items ){
             console.log(items);
             var elements = filter(items, function (offer) {
-                return offer.title.contains('Java');
+                return offer.title.contains('Java') || offer.title.contains('Backend');
             }) || [];
 
             var messageData = {
@@ -259,6 +264,7 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
             "at %d", senderID, recipientID, payload, timeOfPostback);
 
         if (payload) {
+            console.log(payload);
             if (payload == 'PROJECTS') {
                 sendTextMessage(senderID, "Jakich projektów szukasz?");
             } else if (payload == 'SPECIALISTS') {
