@@ -1,40 +1,40 @@
-module.exports = function(router, Item, Pharmacy) {
+module.exports = function(router, Offer) {
     router
         .get('/', function (req, res) {
             res.json(200, 'it\'s alive');
         })
-        .get('/items', function (req, res) {
+        .get('/offers', function (req, res) {
             // http://mongoosejs.com/docs/api.html#query_Query-find
-            Item.find( function (err, items ){
-                res.json(200, {items: items});
+            Offer.find( function (err, items ){
+                res.json(200, {offers: items});
             });
         })
-        .post('/items', function (req, res) {
-            var item = new Item( req.body );
+        .post('/offers', function (req, res) {
+            var item = new Offer( req.body );
             console.log(req.body);
             // http://mongoosejs.com/docs/api.html#model_Model-save
             item.save(function (err) {
-                res.json(200, {item: item});
+                res.json(200, {offer: item});
             });
         })
 
-        .delete('/items', function (req, res) {
+        .delete('/offers', function (req, res) {
             // http://mongoosejs.com/docs/api.html#query_Query-remove
-            Item.remove({ completed: true }, function (err ) {
+            Offer.remove({ completed: true }, function (err ) {
                 res.json(200, {msg: 'OK'});
             });
         })
 
-        .get('/items/:id', function (req, res) {
+        .get('/offers/:id', function (req, res) {
             // http://mongoosejs.com/docs/api.html#model_Model.findById
-            Item.findById( req.params.id, function (err, item ) {
-                res.json(200, {item: item});
+            Offer.findById( req.params.id, function (err, item ) {
+                res.json(200, {offer: item});
             });
         })
 
-        .put('/items/:id', function (req, res) {
+        .put('/offers/:id', function (req, res) {
             // http://mongoosejs.com/docs/api.html#model_Model.findById
-            Item.findById( req.params.id, function (err, item ) {
+            Offer.findById( req.params.id, function (err, item ) {
                 console.log(req.body);
                 item.id = req.body.id;
                 item.title = req.body.title;
@@ -42,14 +42,14 @@ module.exports = function(router, Item, Pharmacy) {
                 item.lon = req.body.lon;
                 // http://mongoosejs.com/docs/api.html#model_Model-save
                 item.save( function ( err, item ){
-                    res.json(200, {item: item});
+                    res.json(200, {offer: item});
                 });
             });
         })
 
-        .delete('/items/:id', function (req, res) {
+        .delete('/offers/:id', function (req, res) {
             // http://mongoosejs.com/docs/api.html#model_Model.findById
-            Item.findById( req.params.id, function (err, item ) {
+            Offer.findById( req.params.id, function (err, item ) {
                 // http://mongoosejs.com/docs/api.html#model_Model.remove
                 item.remove( function ( err, item ){
                     res.json(200, {msg: 'OK'});
@@ -57,20 +57,6 @@ module.exports = function(router, Item, Pharmacy) {
             });
         });
 
-
-    router
-        .get('/pharmacies', function (req, res) {
-            // http://mongoosejs.com/docs/api.html#query_Query-find
-            Pharmacy.find( function (err, pharmacies ){
-                res.json(200, {pharmacies: pharmacies});
-            });
-        })
-        .get('/pharmacies/:id', function (req, res) {
-            // http://mongoosejs.com/docs/api.html#model_Model.findById
-            Pharmacy.findById( req.params.id, function (err, item ) {
-                res.json(200, {pharmacy: item});
-            });
-        });
 
     return router
 };

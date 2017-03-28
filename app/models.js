@@ -1,24 +1,19 @@
 module.exports = function(mongoose) {
 
     // Mongoose ItemsSchema definition
-    var ItemsSchema = new mongoose.Schema({
-            id       : String,
-            title    : String,
-            lat: String,
-            lon: String
+    var OffersSchema = new mongoose.Schema({
+            id              : String,
+            title           : String,
+            city            : String,
+            country         : String,
+            photo           : String,
+            salary          : String,
+            technologies    : String,
+            webpage         : String
         }),
-        Item = mongoose.model('Item', ItemsSchema),
-        PharmacySchema = new mongoose.Schema({
-            id: String,
-            title: String,
-            address: String,
-            lat: String,
-            lon: String
-        }),
-        Pharmacy = mongoose.model('Pharmacy', PharmacySchema);
+        Offer = mongoose.model('Offer', OffersSchema);
 
     return {
-        Item: Item,
-        Pharmacy: Pharmacy
+        Offer: Offer
     }
 };
