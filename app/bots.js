@@ -1,17 +1,17 @@
 module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
-    if (typeof String.prototype.contains === 'undefined') { String.prototype.contains = function(it) { return this.indexOf(it) != -1; }; }
+    if (typeof String.prototype.contains === 'undefined') { String.prototype.contains = function(it) { return this.indexOf(it) !== -1; }; }
 
     function receivedAuthentication(event) {
         var senderID = event.sender.id;
-        var recipientID = event.recipient.id;
-        var timeOfAuth = event.timestamp;
+        // var recipientID = event.recipient.id;
+        // var timeOfAuth = event.timestamp;
 
         // The 'ref' field is set in the 'Send to Messenger' plugin, in the 'data-ref'
         // The developer can set this to an arbitrary value to associate the
         // authentication callback with the 'Send to Messenger' click event. This is
         // a way to do account linking when the user clicks the 'Send to Messenger'
         // plugin.
-        var passThroughParam = event.optin.ref;
+        // var passThroughParam = event.optin.ref;
 
         // console.log("Received authentication for user %d and page %d with pass " +
         //     "through param '%s' at %d", senderID, recipientID, passThroughParam,
@@ -168,53 +168,6 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
         callSendAPI(messageData);
     }
 
-    function sendGenericMessage(recipientId) {
-        var messageData = {
-            recipient: {
-                id: recipientId
-            },
-            message: {
-                attachment: {
-                    type: "template",
-                    payload: {
-                        template_type: "generic",
-                        elements: [{
-                            title: "rift",
-                            subtitle: "Next-generation virtual reality",
-                            item_url: "https://www.oculus.com/en-us/rift/",
-                            image_url: "http://messengerdemo.parseapp.com/img/rift.png",
-                            buttons: [{
-                                type: "web_url",
-                                url: "https://www.oculus.com/en-us/rift/",
-                                title: "Open Web URL"
-                            }, {
-                                type: "postback",
-                                title: "Call Postback",
-                                payload: "Payload for first bubble",
-                            }]
-                        }, {
-                            title: "touch",
-                            subtitle: "Your Hands, Now in VR",
-                            item_url: "https://www.oculus.com/en-us/touch/",
-                            image_url: "http://messengerdemo.parseapp.com/img/touch.png",
-                            buttons: [{
-                                type: "web_url",
-                                url: "https://www.oculus.com/en-us/touch/",
-                                title: "Open Web URL"
-                            }, {
-                                type: "postback",
-                                title: "Call Postback",
-                                payload: "Payload for second bubble",
-                            }]
-                        }]
-                    }
-                }
-            }
-        };
-
-        callSendAPI(messageData);
-    }
-
     function callSendAPI(messageData) {
         request({
             uri: 'https://graph.facebook.com/v2.6/me/messages',
@@ -223,7 +176,7 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
             json: messageData
 
         }, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode === 200) {
                 var recipientId = body.recipient_id;
                 var messageId = body.message_id;
 
@@ -286,13 +239,17 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
                     break;
 
                 case 'generic':
-                    sendGenericMessage(senderID);
+                    sendButtonMessage(senderID, "Witaj! W czym Ci mogę pomóć? Wybierz opcję");
                     break;
 
                 default:
-                    if (messageText != null) {
+                    if (messageText !== null) {
                         var s = messageText.toLocaleLowerCase();
-                        if (s.contains('API')
+                        if (s.contains('Szukam projektów')) {
+                            sendTextMessage(senderID, "Jakich projektów szukasz?");
+                        } else if (s.contains('Szukam specialistów')) {
+                            sendTextMessage(senderID, "Podaj nam swój adres e-mail, podeślemy Ci naszą ofertę.");
+                        } else if (s.contains('API')
                             || s.contains('dynamiczny')
                             || s.contains('narkoty')
                             || s.contains('api')
@@ -339,11 +296,11 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
             "at %d", senderID, recipientID, payload, timeOfPostback);
 
         if (payload) {
-            if (payload == 'PROJECTS') {
+            if (payload === 'PROJECTS') {
                 sendTextMessage(senderID, "Jakich projektów szukasz?");
-            } else if (payload == 'SPECIALISTS') {
+            } else if (payload === 'SPECIALISTS') {
                 sendTextMessage(senderID, "Podaj nam swój adres e-mail, podeślemy Ci naszą ofertę.");
-            } else if (payload == 'HELP') {
+            } else if (payload === 'HELP') {
                 sendButtonMessage(senderID);
             }
 
@@ -372,7 +329,7 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
             var data = req.body;
 
             // Make sure this is a page subscription
-            if (data.object == 'page') {
+            if (data.object === 'page') {
                 // Iterate over each entry
                 // There may be multiple if batched
                 data.entry.forEach(function(pageEntry) {
