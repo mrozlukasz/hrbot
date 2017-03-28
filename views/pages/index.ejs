@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+
+<body>
+<div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.5";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+
+  <% include ../partials/nav.ejs %>
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="/image-44.jpeg">
+    </a>
+    <h3>HR Bot</h3>
+    <p>Witaj! Szukasz ciekawych projektów?<br>Chętnie pomogę, napisz do mnie.</p>
+      <div class="row">
+          <div class="btn-group-vertical">
+            <div class="fb-messengermessageus"
+                 type="button"
+                 messenger_app_id="540239382848956"
+                 page_id="1823745734569394"
+                 color="blue"
+                 size="standard" ></div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="container content">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="testimonials">
+            <div class="active item">
+              <div class="carousel-info">
+                <img alt="" src="/user-297566_960_720.png" class="pull-left">
+                <div class="pull-left">
+                  <span class="testimonials-name">Anetka</span>
+                  <span class="testimonials-post">Pracownica działu HR</span>
+                </div>
+              </div>
+              <blockquote>
+                <p>Możesz zapytać mnie o projekty, które Ciebie interesują a ja poszukam ich dla Ciebie. Jeśli ktoś będzie oferował projekt, który Ciebie interesuje, z przyjemnością powiadomię Ciebie o nowych możliwościach.</p>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container groups">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="wrapper">
+            <span class="group">
+                <h4><i class="fa fa-user" style="color: orange"></i> Szukam projektu</h4>
+            </span>
+      </div>
+      <div class="well">
+        <ol>
+          <li><p><span>Zapytaj Anetkę o aktualne projekty.</span></p></li>
+          <li><p><span>Anetka poszuka dla Ciebie projektów spełniających Twoje kryteria.</span></p></li>
+          <li><p><span>Gdy taki projekt się znajdzie, Anetka napisze do Ciebie.</span></p></li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="wrapper1">
+            <span class="group1">
+                <h4><i class="fa fa-user" style="color: indianred"></i> Potrzebuję specjalistów</h4>
+            </span>
+      </div>
+      <div class="well">
+        <ol>
+          <li><p><span>Anetka pomoże Ci odnaleźć najlepszych specialistów.</span></p></li>
+          <li><p><span>Anetka skontaktuje się z Tobą jeśli pojawi się osoba o pożądanych kompetencjach.</span></p></li>
+          <li><p><span>Anetka wykona dla Ciebie zestawienie dostępnych specjalistów.</span></p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="col-sm-4 col-sm-offset-4">
+        <img src='https://chart.googleapis.com/chart?cht=qr&chl=http%3A%2F%2Fpharmwawa.herokuapp.com%2F&chs=360x360&choe=UTF-8&chld=L|2' alt='qr code'><a href='http://www.qrcode-generator.de' border='0' style='cursor:default'  rel='nofollow'></a>
+    </div>
+</div>
+
+</body>
+</html>
