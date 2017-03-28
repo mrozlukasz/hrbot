@@ -1,4 +1,4 @@
-module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
+module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
     if (typeof String.prototype.contains === 'undefined') { String.prototype.contains = function(it) { return this.indexOf(it) != -1; }; }
 
     function receivedAuthentication(event) {
@@ -49,12 +49,12 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
                         text: text || "W czym Ci mogę pomóć? Wybierz opcję",
                         buttons:[{
                             type: "postback",
-                            title: "Chciałbym kupić",
-                            payload: "BUY"
+                            title: "Szukam projektu",
+                            payload: "PROJECTS"
                         }, {
                             type: "postback",
-                            title: "Szukam apteki",
-                            payload: "PHARMACY"
+                            title: "Szukam specjalisty",
+                            payload: "SPECIALISTS"
                         }]
                     }
                 }
@@ -64,7 +64,7 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
         callSendAPI(messageData);
     }
 
-    function sendMedicine(recipientId) {
+    function sendBackend(recipientId) {
         var messageData = {
             recipient: {
                 id: recipientId
@@ -75,7 +75,7 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
                     payload: {
                         template_type: "generic",
                         elements: [{
-                            title: "Voltaren",
+                            title: "Backend",
                             subtitle: "Maść przeciwbólowa",
                             item_url: "http://www.voltaren.pl/",
                             image_url: "http://www.voltaren.pl/sites/all/themes/voltaren/images/logo/voltaren-logo.png",
@@ -91,7 +91,7 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
                                 }
                             ]
                         }, {
-                            title: "Ibuprom MAX",
+                            title: "Backend 2",
                             subtitle: "Tabletki powlekane",
                             item_url: "https://www.ibuprom.pl/ibuprom_max.html",
                             image_url: "https://www.ibuprom.pl/img/new/ibuprom_max.png",
@@ -116,7 +116,7 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
         callSendAPI(messageData);
     }
 
-    function sendPharmacies(recipientId) {
+    function sendFrontend(recipientId) {
         var messageData = {
             recipient: {
                 id: recipientId
@@ -127,7 +127,7 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
                     payload: {
                         template_type: "generic",
                         elements: [{
-                            title: "Ziko Apteka",
+                            title: "Frontend",
                             subtitle: "Targowa 39, 03-729 Warszawa",
                             item_url: "https://goo.gl/maps/5phMpL6KRMt",
                             image_url: "https://lh3.googleusercontent.com/-231glKPCWuY/VgKvzi7tiHI/AAAAAAAAAAw/q57wqYerKQYjmQESO72U1jGGKHted2wRQ/s408-k-no/",
@@ -143,7 +143,7 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
                             }
                             ]
                         }, {
-                            title: "Apteka Przy Wileńskiej",
+                            title: "Frontend 2",
                             subtitle: "Wileńska 9, 03-001 Warszawa",
                             item_url: "https://goo.gl/maps/RN13omtnA4u",
                             image_url: "https://geo1.ggpht.com/cbk?panoid=ONUmYhFtpKUTsZaBrhSIcQ&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=256&yaw=322.52&pitch=0&thumbfov=100",
@@ -292,26 +292,27 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
                 default:
                     if (messageText != null) {
                         var s = messageText.toLocaleLowerCase();
-                        if (s.contains('narkotyki')
-                            || s.contains('hasz')
-                            || s.contains('mar')
+                        if (s.contains('API')
+                            || s.contains('dynamiczny')
+                            || s.contains('narkoty')
+                            || s.contains('api')
                             || s.contains('uana')
                             || s.contains('koka')
                             || s.contains('her')
                             || s.contains('kok')
                             || s.contains('lsd')) {
-                            sendTextMessage(senderID, 'A ty niedobry! https://www.youtube.com/watch?v=iSHG_B4GhFg');
+                            sendTextMessage(senderID, 'Baśka potrafi robić API https://www.youtube.com/watch?v=USaxePzTmTs');
+                        } else if (s.contains('@')) {
+                            sendTextMessage(senderID, 'Dziękujemy. Oferta zostanie przygotowana dla Ciebie w przeciągu 24 godzin. Miłego dnia!');
                         } else {
                             if (s.contains('hej')
                                 || s.contains('cześć')
                                 || s.contains('witam') ) {
                                 sendButtonMessage(senderID, "Witaj! W czym Ci mogę pomóć? Wybierz opcję");
-                            } else if (s.contains('boli')) {
-                                sendMedicine(senderID);
-                            } else if (s.contains('gdzie')) {
-                                sendPharmacies(senderID);
-                            } else if (s.contains('insul') ) {
-                                sendTextMessage(senderID, 'Przyjęłam zgłoszenie, gdy znajdę dla Ciebie insulinę, powiadomię Ciebie o tym.');
+                            } else if (s.contains('java') || s.contains('backend')) {
+                                sendBackend(senderID);
+                            } else if (s.contains('frontend') || s.contains('angular')) {
+                                sendFrontend(senderID);
                             } else {
                                 sendButtonMessage(senderID, "Nie rozumiem, spróbuj innych opcji.");
                             }
@@ -338,14 +339,12 @@ module.exports = function(request, router, PAGE_ACCESS_TOKEN, VERIFY_TOKEN) {
             "at %d", senderID, recipientID, payload, timeOfPostback);
 
         if (payload) {
-            if (payload == 'SELL') {
-                sendTextMessage(senderID, "Co chciałbyś sprzedać?");
-            } else if (payload == 'BUY') {
-                sendTextMessage(senderID, "Co chciałbyś kupić?");
+            if (payload == 'PROJECTS') {
+                sendTextMessage(senderID, "Jakich projektów szukasz?");
+            } else if (payload == 'SPECIALISTS') {
+                sendTextMessage(senderID, "Podaj nam swój adres e-mail, podeślemy Ci naszą ofertę.");
             } else if (payload == 'HELP') {
                 sendButtonMessage(senderID);
-            } else if (payload == 'PHARMACY') {
-                sendPharmacies(senderID);
             }
 
         } else {
