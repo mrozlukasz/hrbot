@@ -101,7 +101,7 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
         Offers.find( function (err, items ){
             var elements = filter(items, function (offer) {
                 return offer.title.contains('Java');
-            });
+            }) || [];
             messageData.message.payload.elements = elements;
             callSendAPI(messageData);
         });
@@ -126,7 +126,7 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
         Offers.find( function (err, items ){
             var elements = filter(items, function (offer) {
                 return offer.title.contains('Frontend');
-            });
+            }) || [];
             messageData.message.payload.elements = elements;
             callSendAPI(messageData);
         });
