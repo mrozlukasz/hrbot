@@ -260,11 +260,11 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
             "at %d", senderID, recipientID, payload, timeOfPostback);
 
         if (payload) {
-            if (payload === 'PROJECTS') {
+            if (payload == 'PROJECTS') {
                 sendTextMessage(senderID, "Jakich projektów szukasz?");
-            } else if (payload === 'SPECIALISTS') {
+            } else if (payload == 'SPECIALISTS') {
                 sendTextMessage(senderID, "Podaj nam swój adres e-mail, podeślemy Ci naszą ofertę.");
-            } else if (payload === 'HELP') {
+            } else if (payload == 'HELP') {
                 sendButtonMessage(senderID);
             }
 

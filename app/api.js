@@ -6,7 +6,7 @@ module.exports = function(router, Offer) {
         .get('/offers', function (req, res) {
             // http://mongoosejs.com/docs/api.html#query_Query-find
             Offer.find( function (err, items ){
-                res.json(200, {offers: items});
+                res.json(200, items);
             });
         })
         .post('/offers', function (req, res) {
