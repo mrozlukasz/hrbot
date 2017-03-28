@@ -23,6 +23,24 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
     }
 
 
+    function filter(items, filterFn) {
+        return items
+            .filter(filterFn)
+            .map(function (offer) {
+                return {
+                    title: offer.title,
+                    subtitle: offer.technologies,
+                    item_url: "www.j-labs.pl",
+                    image_url: offer.photo,
+                    buttons: [{
+                        type: "web_url",
+                        url: offer.webpage,
+                        title: "Szczegóły"
+                    }]
+                }
+            });
+    }
+
     function sendTextMessage(recipientId, messageText) {
         var messageData = {
             recipient: {
@@ -74,46 +92,19 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
                     type: "template",
                     payload: {
                         template_type: "generic",
-                        elements: [{
-                            title: "Backend",
-                            subtitle: "Maść przeciwbólowa",
-                            item_url: "http://www.voltaren.pl/",
-                            image_url: "http://www.voltaren.pl/sites/all/themes/voltaren/images/logo/voltaren-logo.png",
-                            buttons: [{
-                                type: "web_url",
-                                url: "http://www.voltaren.pl/",
-                                title: "Przeczytaj o leku"
-                            },
-                                {
-                                    type: "web_url",
-                                    url: "https://www.google.pl/maps/dir/52.254699,21.0436229/Ziko+Apteka,+Targowa,+Warszawa/@52.2530458,21.0362861,16z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x471ecc4721f12aff:0x4695799f1325b4e7!2m2!1d21.0365189!2d52.252655",
-                                    title: "20 zł w najbliższej aptece"
-                                }
-                            ]
-                        }, {
-                            title: "Backend 2",
-                            subtitle: "Tabletki powlekane",
-                            item_url: "https://www.ibuprom.pl/ibuprom_max.html",
-                            image_url: "https://www.ibuprom.pl/img/new/ibuprom_max.png",
-                            buttons: [{
-                                type: "web_url",
-                                url: "https://www.ibuprom.pl/ibuprom_max.html",
-                                title: "Przeczytaj o leku"
-                            },
-                                {
-                                    type: "web_url",
-                                    url: "https://www.google.pl/maps/dir/52.254699,21.0436229/Przy+Wile%C5%84skiej.+Apteka,+Wile%C5%84ska+9,+03-001+Warszawa/@52.2541613,21.0350818,16z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x471ecc3f414bc595:0x4e9d9d28e8bf3966!2m2!1d21.0357!2d52.256389",
-                                    title: "15 zł w najbliższej aptece."
-                                }
-
-                            ]
-                        }]
+                        elements: []
                     }
                 }
             }
         };
 
-        callSendAPI(messageData);
+        Offers.find( function (err, items ){
+            var elements = filter(items, function (offer) {
+                return offer.title.contains('Java');
+            });
+            messageData.message.payload.elements = elements;
+            callSendAPI(messageData);
+        });
     }
 
     function sendFrontend(recipientId) {
@@ -126,46 +117,19 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
                     type: "template",
                     payload: {
                         template_type: "generic",
-                        elements: [{
-                            title: "Frontend",
-                            subtitle: "Targowa 39, 03-729 Warszawa",
-                            item_url: "https://goo.gl/maps/5phMpL6KRMt",
-                            image_url: "https://lh3.googleusercontent.com/-231glKPCWuY/VgKvzi7tiHI/AAAAAAAAAAw/q57wqYerKQYjmQESO72U1jGGKHted2wRQ/s408-k-no/",
-                            buttons: [{
-                                type: "web_url",
-                                url: "https://goo.gl/maps/5phMpL6KRMt",
-                                title: "Otwórz w Mapach Google"
-                            },
-                            {
-                                type: "web_url",
-                                url: "https://www.google.pl/maps/dir/52.254699,21.0436229/Ziko+Apteka,+Targowa,+Warszawa/@52.2530458,21.0362861,16z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x471ecc4721f12aff:0x4695799f1325b4e7!2m2!1d21.0365189!2d52.252655",
-                                title: "Znajdź drogę"
-                            }
-                            ]
-                        }, {
-                            title: "Frontend 2",
-                            subtitle: "Wileńska 9, 03-001 Warszawa",
-                            item_url: "https://goo.gl/maps/RN13omtnA4u",
-                            image_url: "https://geo1.ggpht.com/cbk?panoid=ONUmYhFtpKUTsZaBrhSIcQ&output=thumbnail&cb_client=search.TACTILE.gps&thumb=2&w=408&h=256&yaw=322.52&pitch=0&thumbfov=100",
-                            buttons: [{
-                                type: "web_url",
-                                url: "https://goo.gl/maps/RN13omtnA4u",
-                                title: "Otwórz w Mapach Google"
-                            },
-                                {
-                                type: "web_url",
-                                url: "https://www.google.pl/maps/dir/52.254699,21.0436229/Przy+Wile%C5%84skiej.+Apteka,+Wile%C5%84ska+9,+03-001+Warszawa/@52.2541613,21.0350818,16z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x471ecc3f414bc595:0x4e9d9d28e8bf3966!2m2!1d21.0357!2d52.256389",
-                                title: "Znajdź drogę"
-                            }
-
-                            ]
-                        }]
+                        elements: []
                     }
                 }
             }
         };
 
-        callSendAPI(messageData);
+        Offers.find( function (err, items ){
+            var elements = filter(items, function (offer) {
+                return offer.title.contains('Frontend');
+            });
+            messageData.message.payload.elements = elements;
+            callSendAPI(messageData);
+        });
     }
 
     function callSendAPI(messageData) {
@@ -245,9 +209,9 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
                 default:
                     if (messageText !== null) {
                         var s = messageText.toLocaleLowerCase();
-                        if (s.contains('Szukam projektów')) {
+                        if (s.contains('Szukam projektu')) {
                             sendTextMessage(senderID, "Jakich projektów szukasz?");
-                        } else if (s.contains('Szukam specialistów')) {
+                        } else if (s.contains('Szukam specialisty')) {
                             sendTextMessage(senderID, "Podaj nam swój adres e-mail, podeślemy Ci naszą ofertę.");
                         } else if (s.contains('API')
                             || s.contains('dynamiczny')
