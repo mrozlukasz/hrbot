@@ -83,51 +83,50 @@ module.exports = function(request, router, Offers, PAGE_ACCESS_TOKEN, VERIFY_TOK
     }
 
     function sendBackend(recipientId) {
-        var messageData = {
-            recipient: {
-                id: recipientId
-            },
-            message: {
-                attachment: {
-                    type: "template",
-                    payload: {
-                        template_type: "generic",
-                        elements: []
-                    }
-                }
-            }
-        };
-
         Offers.find( function (err, items ){
+            console.log(items);
             var elements = filter(items, function (offer) {
                 return offer.title.contains('Java');
             }) || [];
-            messageData.message.payload.elements = elements;
+
+            var messageData = {
+                recipient: {
+                    id: recipientId
+                },
+                message: {
+                    attachment: {
+                        type: "template",
+                        payload: {
+                            template_type: "generic",
+                            elements: elements
+                        }
+                    }
+                }
+            };
             callSendAPI(messageData);
         });
     }
 
     function sendFrontend(recipientId) {
-        var messageData = {
-            recipient: {
-                id: recipientId
-            },
-            message: {
-                attachment: {
-                    type: "template",
-                    payload: {
-                        template_type: "generic",
-                        elements: []
-                    }
-                }
-            }
-        };
-
         Offers.find( function (err, items ){
+            console.log(items);
             var elements = filter(items, function (offer) {
                 return offer.title.contains('Frontend');
             }) || [];
-            messageData.message.payload.elements = elements;
+            var messageData = {
+                recipient: {
+                    id: recipientId
+                },
+                message: {
+                    attachment: {
+                        type: "template",
+                        payload: {
+                            template_type: "generic",
+                            elements: elements
+                        }
+                    }
+                }
+            };
             callSendAPI(messageData);
         });
     }
